@@ -1,0 +1,150 @@
+{% extends "base_authenticated.html" %}
+{% block title %}Deep Work{% endblock %}
+{% block page_content %}
+
+<h2 class="text-2xl font-bold mb-6">Deep Work</h2>
+
+<div id="messages" class="mb-4"></div>
+
+{% if completed_skills %}
+<div class="mb-6">
+    <p class="text-sm text-gray-400 mb-2">Trained today:</p>
+    <div class="flex gap-2 flex-wrap">
+        {% for skill in completed_skills %}
+        <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded-lg text-xs">{{ skill.display_name }} ✓</span>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if available_skills %}
+<div class="bg-gray-950 border border-gray-800 rounded-xl p-6 max-w-md" id="skill-picker">
+    <h3 class="text-lg font-semibold mb-4">Today's Training</h3>
+
+    <div class="space-y-2 mb-6" id="skill-options">
+        {% for skill in available_skills %}
+        <button type="button"
+            class="skill-select-btn w-full text-left px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg hover:border-white transition"
+            data-skill-key="{{ skill.skill_key }}"
+            data-skill-name="{{ skill.display_name }}">
+            {{ skill.display_name }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <!-- Organize break timer (30 min, no reward) -->
+    <div id="organize-section" class="hidden mb-6">
+        <p class="text-sm text-gray-400 mb-2">Organize break — get ready to train <span id="chosen-skill-name" class="text-white"></span></p>
+        <div class="text-4xl font-mono mb-3" id="organize-timer">30:00</div>
+        <button type="button" id="start-organize-btn" class="px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
+            Start 30-min Organize Timer
+        </button>
+        <button type="button" id="skip-organize-btn" class="ml-2 px-5 py-2 border border-gray-700 rounded-lg hover:border-white transition">
+            Skip to Training
+        </button>
+    </div>
+
+    <!-- 2hr training timer -->
+    <div id="training-section" class="hidden">
+        <p class="text-sm text-gray-400 mb-2">Training: <span id="training-skill-name" class="text-white"></span></p>
+        <div class="text-4xl font-mono mb-3" id="training-timer">2:00:00</div>
+        <button type="button" id="start-training-btn" class="px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
+            Start 2-hour Training
+        </button>
+        <p class="text-xs text-yellow-500 mt-3 hidden" id="warning-text">
+            Keep this tab open. Closing or navigating away will lose progress.
+        </p>
+    </div>
+</div>
+{% elif all_done %}
+<p class="text-gray-400">All of today's training is complete. Come back tomorrow.</p>
+{% else %}
+<p class="text-gray-400">No training scheduled for today.</p>
+{% endif %}
+
+<script>
+{% if available_skills %}
+let chosenSkillKey = null;
+let chosenSkillName = null;
+
+document.querySelectorAll('.skill-select-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        chosenSkillKey = btn.dataset.skillKey;
+        chosenSkillName = btn.dataset.skillName;
+        document.getElementById('chosen-skill-name').textContent = chosenSkillName;
+        document.getElementById('training-skill-name').textContent = chosenSkillName;
+        document.getElementById('skill-options').classList.add('hidden');
+        document.getElementById('organize-section').classList.remove('hidden');
+    });
+});
+
+document.getElementById('skip-organize-btn').addEventListener('click', () => {
+    document.getElementById('organize-section').classList.add('hidden');
+    document.getElementById('training-section').classList.remove('hidden');
+});
+
+document.getElementById('start-organize-btn').addEventListener('click', function() {
+    this.disabled = true;
+    document.getElementById('skip-organize-btn').disabled = true;
+    let seconds = 30 * 60;
+    const display = document.getElementById('organize-timer');
+    const interval = setInterval(() => {
+        seconds--;
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        display.textContent = `${m}:${s}`;
+        if (seconds <= 0) {
+            clearInterval(interval);
+            document.getElementById('organize-section').classList.add('hidden');
+            document.getElementById('training-section').classList.remove('hidden');
+        }
+    }, 1000);
+});
+
+document.getElementById('start-training-btn').addEventListener('click', function() {
+    this.disabled = true;
+    document.getElementById('warning-text').classList.remove('hidden');
+    let seconds = 2 * 60 * 60;
+    const display = document.getElementById('training-timer');
+    const interval = setInterval(() => {
+        seconds--;
+        const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+        const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        display.textContent = `${h}:${m}:${s}`;
+        if (seconds <= 0) {
+            clearInterval(interval);
+            finishTraining();
+        }
+    }, 1000);
+});
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function finishTraining() {
+    fetch(`/deepwork/complete/${chosenSkillKey}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('messages').innerHTML =
+                `<p class="text-green-400 text-sm">Training complete! +${data.xp_earned} ${data.skill_name} XP</p>`;
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            document.getElementById('messages').innerHTML =
+                `<p class="text-red-400 text-sm">${data.error}</p>`;
+        }
+    });
+}
+{% endif %}
+</script>
+
+{% endblock %}

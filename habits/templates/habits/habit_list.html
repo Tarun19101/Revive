@@ -1,0 +1,49 @@
+{% extends "base_authenticated.html" %}
+{% block title %}Habits{% endblock %}
+{% block page_content %}
+
+<h2 class="text-2xl font-bold mb-6">Habits</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <p class="text-green-400 text-sm mb-4">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<div class="bg-gray-950 border border-gray-800 rounded-xl p-6 max-w-2xl">
+    <table class="w-full text-sm">
+        <thead>
+            <tr class="text-left text-gray-400 border-b border-gray-800">
+                <th class="py-2 pr-2">S.No.</th>
+                <th class="py-2 pr-2">Habit</th>
+                <th class="py-2 pr-2">Streak</th>
+                <th class="py-2 pr-2">Longest</th>
+                <th class="py-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for habit in habits %}
+            <tr class="border-b border-gray-900">
+                <td class="py-2 pr-2">{{ forloop.counter }}</td>
+                <td class="py-2 pr-2">{{ habit.name }}</td>
+                <td class="py-2 pr-2">{{ habit.streak }}</td>
+                <td class="py-2 pr-2 text-gray-500">{{ habit.longest_streak }}</td>
+                <td class="py-2">
+                    {% if habit.done_today %}
+                        <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded-lg text-xs">Done</span>
+                    {% else %}
+                        <form method="post" action="{% url 'complete_habit' habit.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="px-3 py-1 bg-white text-black rounded-lg text-xs hover:bg-gray-200 transition">
+                                Complete
+                            </button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

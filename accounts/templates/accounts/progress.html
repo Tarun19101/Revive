@@ -1,0 +1,33 @@
+{% extends "base_authenticated.html" %}
+{% block title %}Progress{% endblock %}
+{% block page_content %}
+
+<h2 class="text-2xl font-bold mb-8">Player Progress</h2>
+
+<div class="grid gap-6 max-w-2xl">
+    {% for attr in grouped %}
+    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">{{ attr.name }}</h3>
+            <span class="text-sm text-gray-400">Level {{ attr.level }}</span>
+        </div>
+
+        <div class="space-y-4">
+            {% for skill in attr.skills %}
+            <div>
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-sm">{{ skill.display_name }}</span>
+                    <span class="text-xs text-gray-500">Lvl {{ skill.level }}</span>
+                </div>
+                <div class="w-full bg-gray-800 rounded-full h-2 mb-1">
+                    <div class="bg-white h-2 rounded-full" style="width: {{ skill.xp_progress_percent }}%"></div>
+                </div>
+                <p class="text-xs text-gray-500">{{ skill.xp }} / {{ skill.xp_for_next_level }} XP</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

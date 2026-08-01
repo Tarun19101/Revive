@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Create Your Character{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-black text-white flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-sm">
+        <h2 class="text-2xl font-bold mb-2 text-center">Welcome, Traveler.</h2>
+        <p class="text-gray-400 text-sm mb-1 text-center">Let's build your character.</p>
+        <p class="text-gray-500 text-xs mb-6 text-center">
+            Before creating your profile, a few questions that will help.
+        </p>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-red-400 text-sm mt-1">{{ field.errors|striptags }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit"
+                class="w-full py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
+                Begin
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

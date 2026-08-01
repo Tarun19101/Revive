@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-black text-white flex items-center justify-center px-4">
+    <div class="w-full max-w-sm">
+        <h2 class="text-2xl font-bold mb-6 text-center">Welcome back</h2>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-red-400 text-sm mt-1">{{ field.errors|striptags }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit"
+                class="w-full py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
+                Login
+            </button>
+        </form>
+
+        <p class="text-gray-400 text-sm mt-4 text-center">
+            Don't have an account? <a href="{% url 'register' %}" class="text-white underline">Register</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

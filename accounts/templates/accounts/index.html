@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Revive{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4">
+    <h1 class="text-5xl font-bold mb-2 tracking-wide">REVIVE</h1>
+    <p class="text-gray-400 mb-10">Level up your real life.</p>
+
+    <div class="flex gap-4">
+        <a href="{% url 'login' %}"
+           class="px-6 py-3 border border-white rounded-lg hover:bg-white hover:text-black transition">
+            Login
+        </a>
+        <a href="{% url 'register' %}"
+           class="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition">
+            Register
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base_authenticated.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_content %}
+
+<h2 class="text-2xl font-bold mb-1">Welcome back, {{ request.user.username }}</h2>
+<p class="text-gray-400 mb-8">Here's where you stand.</p>
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Player Info -->
+    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+        <h3 class="text-sm text-gray-400 mb-4">Player Info</h3>
+        <div class="space-y-2 text-sm mb-4">
+            <div class="flex justify-between"><span class="text-gray-400">Username</span><span>{{ request.user.username }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Age</span><span>{{ profile.age|default:"—" }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Level</span><span>{{ profile.level }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Money</span><span>₹{{ total_money }}</span></div>
+        </div>
+        <div class="w-full bg-gray-800 rounded-full h-2 mb-1">
+            <div class="bg-white h-2 rounded-full" style="width: {{ profile.xp_progress_percent }}%"></div>
+        </div>
+        <p class="text-xs text-gray-500">{{ profile.xp }} / {{ profile.xp_for_next_level }} XP</p>
+    </div>
+
+    <!-- Today's Tasks -->
+    <a href="{% url 'task_list' %}" class="bg-gray-950 border border-gray-800 rounded-xl p-6 hover:border-gray-600 transition block">
+        <h3 class="text-sm text-gray-400 mb-4">Today's Tasks</h3>
+        {% if today_tasks %}
+            <ul class="space-y-2 text-sm">
+                {% for task in today_tasks %}
+                <li class="flex justify-between">
+                    <span>{{ task.title }}</span>
+                    <span class="text-gray-500 text-xs">{{ task.get_type_display }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 text-sm">No pending tasks today.</p>
+        {% endif %}
+    </a>
+
+    <!-- Today's Habits -->
+    <a href="{% url 'habit_list' %}" class="bg-gray-950 border border-gray-800 rounded-xl p-6 hover:border-gray-600 transition block">
+        <h3 class="text-sm text-gray-400 mb-4">Today's Habits</h3>
+        <ul class="space-y-2 text-sm">
+            {% for habit in habits %}
+            <li class="flex justify-between">
+                <span>{{ habit.name }}</span>
+                {% if habit.done_today %}
+                    <span class="text-green-400 text-xs">Done</span>
+                {% else %}
+                    <span class="text-gray-500 text-xs">Pending</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </a>
+
+    <!-- This Month's Quest -->
+    <a href="{% url 'quest_list' %}" class="bg-gray-950 border border-gray-800 rounded-xl p-6 hover:border-gray-600 transition block">
+        <h3 class="text-sm text-gray-400 mb-4">This Month's Quest</h3>
+        {% if monthly_quest %}
+            <p class="text-sm">{{ monthly_quest.title }}</p>
+            <p class="text-xs text-gray-500 mt-1">Deadline: {{ monthly_quest.deadline }}</p>
+        {% else %}
+            <p class="text-gray-500 text-sm">No monthly quest set.</p>
+        {% endif %}
+    </a>
+
+    <!-- This Month's Expense -->
+    <a href="{% url 'bank_home' %}" class="bg-gray-950 border border-gray-800 rounded-xl p-6 hover:border-gray-600 transition block">
+        <h3 class="text-sm text-gray-400 mb-4">This Month's Expense</h3>
+        <p class="text-2xl font-bold">₹{{ monthly_expense }}</p>
+    </a>
+
+    <!-- This Month's Events -->
+    <a href="{% url 'event_list' %}" class="bg-gray-950 border border-gray-800 rounded-xl p-6 hover:border-gray-600 transition block">
+        <h3 class="text-sm text-gray-400 mb-4">This Month's Events</h3>
+        {% if this_month_events %}
+            <ul class="space-y-2 text-sm">
+                {% for event in this_month_events %}
+                <li class="flex justify-between">
+                    <span>{{ event.title }}</span>
+                    <span class="text-gray-500 text-xs">{{ event.date.day }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 text-sm">No events this month.</p>
+        {% endif %}
+    </a>
+
+</div>
+
+{% endblock %}
