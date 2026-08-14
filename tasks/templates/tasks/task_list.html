@@ -1,4 +1,9 @@
 {% extends "base_authenticated.html" %}
+
+{% block page_header %}
+<h2 class="text-3xl font-display font-bold mb-2">Tasks - "To Move Forward, The Only Thing You Can Do Is Work." </h2>
+{% endblock %}
+
 {% block title %}Tasks{% endblock %}
 {% block page_content %}
 
@@ -11,31 +16,72 @@
 {% endif %}
 
 <!-- Add Task -->
-<div class="bg-gray-950 border border-gray-800 rounded-xl p-6 mb-8 max-w-xl">
-    <h3 class="text-lg font-semibold mb-4">Add Task</h3>
-    <form method="post" class="space-y-4">
-        {% csrf_token %}
-        {% for field in form %}
-            <div>
-                <label class="block text-sm text-gray-400 mb-1">{{ field.label }}</label>
-                {{ field }}
-            </div>
-        {% endfor %}
-        <button type="submit" class="px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
-            Add Task
-        </button>
-    </form>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+
+    <!-- Add Task -->
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <h3 class="text-xl font-display font-semibold mb-4">Add Task</h3>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm text-muted mb-1">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="px-5 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium">
+                Add Task
+            </button>
+        </form>
+    </div>
+
+    <!-- Pending -->
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <h3 class="text-xl font-display font-semibold mb-4">Pending</h3>
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-muted border-b border-teal-500">
+                    <th class="py-2 pr-2">S.No.</th>
+                    <th class="py-2 pr-2">Title</th>
+                    <th class="py-2 pr-2">Type</th>
+                    <th class="py-2 pr-2">Created</th>
+                    <th class="py-2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in pending %}
+                <tr class="border-b border-teal-500">
+                    <td class="py-2 pr-2">{{ forloop.counter }}</td>
+                    <td class="py-2 pr-2">{{ task.title }}</td>
+                    <td class="py-2 pr-2">{{ task.get_type_display }}</td>
+                    <td class="py-2 pr-2 text-muted">{{ task.created_date }}</td>
+                    <td class="py-2">
+                        <form method="post" action="{% url 'complete_task' task.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="px-3 py-1 bg-bg text-text border border-red-500 rounded-lg text-xs hover:border-accent transition">
+                                Complete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="py-4 text-muted text-center">No pending tasks.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 <!-- Today's tables -->
-<div class="grid md:grid-cols-2 gap-6 mb-8">
+<div class="grid md:grid-cols-2 gap-6">
 
     <!-- Important -->
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
-        <h3 class="text-lg font-semibold mb-4">Important Task</h3>
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <h3 class="text-xl font-display font-semibold mb-4">Important Task</h3>
         <table class="w-full text-sm">
             <thead>
-                <tr class="text-left text-gray-400 border-b border-gray-800">
+                <tr class="text-left text-muted border-b border-teal-500">
                     <th class="py-2 pr-2">S.No.</th>
                     <th class="py-2 pr-2">Title</th>
                     <th class="py-2"></th>
@@ -43,31 +89,31 @@
             </thead>
             <tbody>
                 {% for task in today_important %}
-                <tr class="border-b border-gray-900">
+                <tr class="border-b border-teal-500">
                     <td class="py-2 pr-2">{{ forloop.counter }}</td>
                     <td class="py-2 pr-2">{{ task.title }}</td>
                     <td class="py-2">
                         <form method="post" action="{% url 'complete_task' task.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="px-3 py-1 bg-white text-black rounded-lg text-xs hover:bg-gray-200 transition">
+                            <button type="submit" class="px-3 py-1 bg-bg text-text border border-red-500 rounded-lg text-xs hover:border-accent transition">
                                 Complete
                             </button>
                         </form>
                     </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="4" class="py-4 text-gray-500 text-center">No important tasks today.</td></tr>
+                <tr><td colspan="3" class="py-4 text-muted text-center">No important tasks today.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
     <!-- Casual -->
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
-        <h3 class="text-lg font-semibold mb-4">Casual Task</h3>
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <h3 class="text-xl font-display font-semibold mb-4">Casual Task</h3>
         <table class="w-full text-sm">
             <thead>
-                <tr class="text-left text-gray-400 border-b border-gray-800">
+                <tr class="text-left text-muted border-b border-teal-500">
                     <th class="py-2 pr-2">S.No.</th>
                     <th class="py-2 pr-2">Title</th>
                     <th class="py-2"></th>
@@ -75,61 +121,24 @@
             </thead>
             <tbody>
                 {% for task in today_casual %}
-                <tr class="border-b border-gray-900">
+                <tr class="border-b border-teal-500">
                     <td class="py-2 pr-2">{{ forloop.counter }}</td>
                     <td class="py-2 pr-2">{{ task.title }}</td>
                     <td class="py-2">
                         <form method="post" action="{% url 'complete_task' task.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="px-3 py-1 bg-white text-black rounded-lg text-xs hover:bg-gray-200 transition">
+                            <button type="submit" class="px-3 py-1 bg-bg text-text border border-red-500 rounded-lg text-xs hover:border-accent transition">
                                 Complete
                             </button>
                         </form>
                     </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="4" class="py-4 text-gray-500 text-center">No casual tasks today.</td></tr>
+                <tr><td colspan="3" class="py-4 text-muted text-center">No casual tasks today.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
 </div>
-
-<!-- Pending -->
-<div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
-    <h3 class="text-lg font-semibold mb-4">Pending</h3>
-    <table class="w-full text-sm">
-        <thead>
-            <tr class="text-left text-gray-400 border-b border-gray-800">
-                <th class="py-2 pr-2">S.No.</th>
-                <th class="py-2 pr-2">Title</th>
-                <th class="py-2 pr-2">Type</th>
-                <th class="py-2 pr-2">Created</th>
-                <th class="py-2"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for task in pending %}
-            <tr class="border-b border-gray-900">
-                <td class="py-2 pr-2">{{ forloop.counter }}</td>
-                <td class="py-2 pr-2">{{ task.title }}</td>
-                <td class="py-2 pr-2">{{ task.get_type_display }}</td>
-                <td class="py-2 pr-2 text-gray-500">{{ task.created_date }}</td>
-                <td class="py-2">
-                    <form method="post" action="{% url 'complete_task' task.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="px-3 py-1 bg-white text-black rounded-lg text-xs hover:bg-gray-200 transition">
-                            Complete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="6" class="py-4 text-gray-500 text-center">No pending tasks.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
 {% endblock %}

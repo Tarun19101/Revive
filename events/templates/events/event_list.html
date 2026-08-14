@@ -1,63 +1,72 @@
 {% extends "base_authenticated.html" %}
+
+{% block page_header %}
+<h2 class="text-3xl font-display font-bold mb-2">Events - "The more you remember, the more clues you have." </h2>
+{% endblock %}
+
 {% block title %}Events{% endblock %}
 {% block page_content %}
 
 <h2 class="text-2xl font-bold mb-6">Events</h2>
 
-<!-- Add Event -->
-<div class="bg-gray-950 border border-gray-800 rounded-xl p-6 mb-8 max-w-xl">
-    <h3 class="text-lg font-semibold mb-4">Add Event</h3>
-    <form method="post" class="space-y-4">
-        {% csrf_token %}
-        {% for field in form %}
-            <div>
-                <label class="block text-sm text-gray-400 mb-1">{{ field.label }}</label>
-                {{ field }}
-            </div>
-        {% endfor %}
-        <button type="submit" class="px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
-            Add Event
-        </button>
-    </form>
-</div>
+<div class="grid md:grid-cols-2 gap-6 mb-8">
 
-<!-- Calendar Grid -->
-<div class="bg-gray-950 border border-gray-800 rounded-xl p-6 mb-8 max-w-2xl">
-    <h3 class="text-lg font-semibold mb-4">{{ month_label }}</h3>
-    <table class="w-full text-center text-sm">
-        <thead>
-            <tr class="text-gray-400">
-                <th class="pb-2">Mon</th>
-                <th class="pb-2">Tue</th>
-                <th class="pb-2">Wed</th>
-                <th class="pb-2">Thu</th>
-                <th class="pb-2">Fri</th>
-                <th class="pb-2">Sat</th>
-                <th class="pb-2">Sun</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for week in grid %}
-            <tr>
-                {% for day in week %}
-                    {% if day == 0 %}
-                        <td class="py-3"></td>
-                    {% elif day == today_day %}
-                        <td class="py-3"><span class="inline-flex items-center justify-center w-8 h-8 bg-white text-black rounded-full font-bold">{{ day }}</span></td>
-                    {% else %}
-                        <td class="py-3">{{ day }}</td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
+    <!-- Add Event -->
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <h3 class="text-xl font-display font-semibold mb-4">Add Event</h3>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm text-muted mb-1">{{ field.label }}</label>
+                    {{ field }}
+                </div>
             {% endfor %}
-        </tbody>
-    </table>
+            <button type="submit" class="px-5 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium">
+                Add Event
+            </button>
+        </form>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <h3 class="text-xl font-display font-semibold mb-4">{{ month_label }}</h3>
+        <table class="w-full text-center text-sm">
+            <thead>
+                <tr class="text-muted">
+                    <th class="pb-2">Mon</th>
+                    <th class="pb-2">Tue</th>
+                    <th class="pb-2">Wed</th>
+                    <th class="pb-2">Thu</th>
+                    <th class="pb-2">Fri</th>
+                    <th class="pb-2">Sat</th>
+                    <th class="pb-2">Sun</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week in grid %}
+                <tr>
+                    {% for day in week %}
+                        {% if day == 0 %}
+                            <td class="py-3"></td>
+                        {% elif day == today_day %}
+                            <td class="py-3"><span class="inline-flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full font-bold">{{ day }}</span></td>
+                        {% else %}
+                            <td class="py-3">{{ day }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
-<div class="grid md:grid-cols-2 gap-6 max-w-4xl">
+<div class="grid md:grid-cols-2 gap-6">
 
     <!-- This Month -->
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
         <h3 class="text-lg font-semibold mb-4">This Month</h3>
         <table class="w-full text-sm">
             <thead>
@@ -75,7 +84,7 @@
                     <td class="py-2 pr-2">{{ event.title }}</td>
                     <td class="py-2 pr-2 text-gray-500">{{ event.get_event_type_display }}</td>
                     <td class="py-2 flex gap-2">
-                        <a href="{% url 'edit_event' event.id %}" class="text-xs text-gray-400 underline hover:text-white">Edit</a>
+                        <a href="{% url 'edit_event' event.id %}" class="text-xs text-gray-400 underline hover:text-blue-400 px-4">Edit</a>
                         <form method="post" action="{% url 'delete_event' event.id %}">
                             {% csrf_token %}
                             <button type="submit" class="text-xs text-red-400 underline hover:text-red-300">Delete</button>
@@ -90,7 +99,7 @@
     </div>
 
     <!-- Next Month -->
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
         <h3 class="text-lg font-semibold mb-4">Next Month ({{ next_month_label }})</h3>
         <table class="w-full text-sm">
             <thead>
@@ -108,7 +117,7 @@
                     <td class="py-2 pr-2">{{ event.title }}</td>
                     <td class="py-2 pr-2 text-gray-500">{{ event.get_event_type_display }}</td>
                     <td class="py-2 flex gap-2">
-                        <a href="{% url 'edit_event' event.id %}" class="text-xs text-gray-400 underline hover:text-white">Edit</a>
+                        <a href="{% url 'edit_event' event.id %}" class="text-xs text-gray-400 underline hover:text-blue-400 px-4">Edit</a>
                         <form method="post" action="{% url 'delete_event' event.id %}">
                             {% csrf_token %}
                             <button type="submit" class="text-xs text-red-400 underline hover:text-red-300">Delete</button>

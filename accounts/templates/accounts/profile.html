@@ -1,21 +1,24 @@
 {% extends "base_authenticated.html" %}
 {% block title %}Profile{% endblock %}
+{% block page_header %}
+<h2 class="text-3xl font-display font-bold mb-2">Profile - "Know Yourself." </h2>
+{% endblock %}
 {% block page_content %}
 
 <h2 class="text-2xl font-bold mb-8">Player Profile</h2>
+{% if messages %}
+    {% for message in messages %}
+        <p class="text-green-400 text-sm mb-4">{{ message }}</p>
+    {% endfor %}
+{% endif %}
 
-<div class="grid gap-8 max-w-2xl">
+<div class="grid md:grid-cols-2 gap-6 max-w-7xl">
 
     <!-- Player Info -->
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
         <h3 class="text-lg font-semibold mb-4">Player Info</h3>
 
-        {% if messages %}
-            {% for message in messages %}
-                <p class="text-green-400 text-sm mb-4">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-
+        
         <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
             <div>
                 <span class="text-gray-400">Username</span>
@@ -51,34 +54,76 @@
                     {{ field }}
                 </div>
             {% endfor %}
-            <button type="submit" name="profile_submit" value="1" class="px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
+            <button type="submit" name="profile_submit" value="1" class="px-5 py-2 bg-accent text-white rounded-lg hover:bg-gray-200 transition font-medium">
                 Save
             </button>
         </form>
     </div>
 
-    <!-- Daily Record -->
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
-        <h3 class="text-lg font-semibold mb-4">Today's Record</h3>
 
-        {% if today_record %}
-            <p class="text-gray-400 text-sm mb-1">{{ today_record.date }}</p>
-            <p class="whitespace-pre-wrap">{{ today_record.text }}</p>
-        {% else %}
-            <form method="post" class="space-y-4">
-                {% csrf_token %}
-                {{ record_form.text }}
-                <button type="submit" name="record_submit" value="1" class="px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
-                    Save
-                </button>
-            </form>
-        {% endif %}
 
-        <a href="{% url 'download_records' %}"
-           class="inline-block mt-4 text-sm text-gray-400 underline hover:text-white transition">
-            Download all records (.md)
-        </a>
+   
+    <!-- Achievements -->
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <h3 class="text-xl font-display font-semibold mb-6">Achievements</h3>
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <div>
+                <p class="text-sm font-medium text-muted mb-3">Gym</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-muted mb-1">Bench Press (kg)</label>
+                        {{ achievement_form.bench_press }}
+                    </div>
+                    <div>
+                        <label class="block text-xs text-muted mb-1">Shoulder Press (kg)</label>
+                        {{ achievement_form.shoulder_press }}
+                    </div>
+                    <div>
+                        <label class="block text-xs text-muted mb-1">Deadlift (kg)</label>
+                        {{ achievement_form.deadlift }}
+                    </div>
+                    <div>
+                        <label class="block text-xs text-muted mb-1">Weighted Squats (kg)</label>
+                        {{ achievement_form.weighted_squats }}
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <p class="text-sm font-medium text-muted mb-3">Body-weight</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-muted mb-1">Max Push-ups</label>
+                        {{ achievement_form.max_pushups }}
+                    </div>
+                    <div>
+                        <label class="block text-xs text-muted mb-1">Max Pull-ups</label>
+                        {{ achievement_form.max_pullups }}
+                    </div>
+                    <div>
+                        <label class="block text-xs text-muted mb-1">Max Russian Crunches</label>
+                        {{ achievement_form.max_russian_crunches }}
+                    </div>
+                    <div>
+                        <label class="block text-xs text-muted mb-1">5km Run Time (min:sec)</label>
+                        <div class="flex gap-2">
+                            {{ achievement_form.run_5km_minutes }}
+                            {{ achievement_form.run_5km_seconds }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" name="achievement_submit" value="1"
+                class="px-5 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium">
+                Save
+            </button>
+        </form>
     </div>
+
+
 
 </div>
 {% endblock %}

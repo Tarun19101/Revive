@@ -4,12 +4,30 @@ from django.contrib import messages
 from datetime import date, timedelta
 from .models import PlayerHabit
 from accounts.models import PlayerSkill
-
+from datetime import date, timedelta
+from accounts.models import PlayerSkill, PlayerRecord
+from accounts.forms import PlayerRecordForm
 
 @login_required
 def habit_list(request):
     habits = request.user.habits.all()
-    context = {'habits': habits}
+    today_record = PlayerRecord.objects.filter(user=request.user, date=date.today()).first()
+    record_form = PlayerRecordForm()
+
+    if request.method == 'POST' and 'record_submit' in request.POST:
+        if not today_record:
+            record_form = PlayerRecordForm(request.POST)
+            if record_form.is_valid():
+                record = record_form.save(commit=False)
+                record.user = request.user
+                record.save()
+                return redirect('habit_list')
+
+    context = {
+        'habits': habits,
+        'today_record': today_record,
+        'record_form': record_form,
+    }
     return render(request, 'habits/habit_list.html', context)
 
 

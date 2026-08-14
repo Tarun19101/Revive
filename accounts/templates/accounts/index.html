@@ -1,19 +1,245 @@
 {% extends "base.html" %}
-{% block title %}Revive{% endblock %}
-{% block content %}
-<div class="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4">
-    <h1 class="text-5xl font-bold mb-2 tracking-wide">REVIVE</h1>
-    <p class="text-gray-400 mb-10">Level up your real life.</p>
+{% load static %}
+{% block title %}Revive - Life RPG Self-Improvement{% endblock %}
 
-    <div class="flex gap-4">
-        <a href="{% url 'login' %}"
-           class="px-6 py-3 border border-white rounded-lg hover:bg-white hover:text-black transition">
-            Login
-        </a>
-        <a href="{% url 'register' %}"
-           class="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition">
-            Register
-        </a>
-    </div>
+
+{% block content %}
+<div class="bg-bg text-text min-h-screen bg-dot-grid">
+    <!-- Navigation -->
+    <nav class="border-b border-border px-12 py-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-display font-bold">REVIVE</h1>
+            <div class="flex gap-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="px-5 py-2 text-text hover:text-accent transition">Dashboard</a>
+                    <a href="{% url 'logout' %}" class="px-5 py-2 text-text hover:text-accent transition">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="px-5 py-2 text-text hover:text-accent transition">Login</a>
+                    <a href="{% url 'register' %}" class="px-5 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="px-12 py-24">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-5xl md:text-6xl font-display font-bold mb-6">
+                If there is only darkness in the world,<br>
+                <span class="text-accent">then I become the star</span><br>
+                to show myself light.
+            </h2>
+            <p class="text-lg text-muted mb-10">
+                Revive is a life RPG that turns your self-improvement journey into an epic adventure. 
+                Track habits, train skills, complete quests, and level up your real-world character.
+            </p>
+            <div class="flex gap-4 justify-center">
+                <a href="{% url 'register' %}" class="px-8 py-3 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium text-lg">
+                    Start Your Journey
+                </a>
+                <a href="{% url 'login' %}" class="px-8 py-3 border border-accent text-accent rounded-lg hover:bg-accent/10 transition font-medium text-lg">
+                    Login
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Revive -->
+    <section class="px-12 py-20 border-t border-border">
+        <div class="max-w-4xl mx-auto">
+            <h3 class="text-3xl font-display font-bold mb-12 text-center">Why Revive?</h3>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="space-y-4">
+                    <h4 class="text-xl font-semibold text-accent">Gamify Your Life</h4>
+                    <p class="text-muted">
+                        Stop treating personal growth like a chore. Revive transforms habits, fitness, learning, and projects into 
+                        quests with real rewards. Level up your character as you level up yourself.
+                    </p>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="text-xl font-semibold text-accent">Train Real Skills</h4>
+                    <p class="text-muted">
+                        Pick from 11 skills across six attributes: Strength, Intelligence, Endurance, Wisdom, Charisma, and Luck. 
+                        Each skill guides you on how to train through both insight (learning) and practice (doing).
+                    </p>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="text-xl font-semibold text-accent">Build Lasting Habits</h4>
+                    <p class="text-muted">
+                        Daily habits with streak tracking keep you accountable. Hit your goals and watch your XP climb. 
+                        Your streak is your strength.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Showcase -->
+    <section class="px-12 py-20 border-t border-border">
+        <div class="max-w-5xl mx-auto">
+            <h3 class="text-3xl font-display font-bold mb-16 text-center">Core Features</h3>
+
+            <!-- Dashboard -->
+            <div class="mb-20">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h4 class="text-2xl font-semibold mb-4">Dashboard Hub</h4>
+                        <p class="text-muted mb-4">
+                            Your command center. See today's habits, pending tasks, active quests, monthly expenses, and upcoming events 
+                            at a glance. Everything you need to know about your progress in one place.
+                        </p>
+                        <ul class="space-y-2 text-sm text-muted">
+                            <li>✓ Real-time progress tracking</li>
+                            <li>✓ XP and level display</li>
+                            <li>✓ Quick access to all features</li>
+                        </ul>
+                    </div>
+                    <div class="bg-surface border border-border rounded-xl p-4 card-glow">
+                        <div class="text-center text-muted">
+                            <img src="{% static 'images/Dashboard.png' %}" alt="Dashboard" class="w-full h-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Habits -->
+            <div class="mb-20">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="bg-surface border border-border rounded-xl p-4 card-glow md:order-2">
+                        <div class="text-center text-muted">
+                            <img src="{% static 'images/Habits.png' %}" alt="Habits" class="w-full h-auto">
+                        </div>
+                    </div>
+                    <div class="md:order-1">
+                        <h4 class="text-2xl font-semibold mb-4">Daily Habits</h4>
+                        <p class="text-muted mb-4">
+                            Five powerful habits to kickstart your day: Workout, Read Books, Meditate, Wake Up Early, and Self-Care. 
+                            Each habit earns you XP, increases your streaks, and levels up your relevant skills.
+                        </p>
+                        <ul class="space-y-2 text-sm text-muted">
+                            <li>✓ Streak tracking</li>
+                            <li>✓ Bonus XP for consistent behavior</li>
+                            <li>✓ Skill-based rewards</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills Training -->
+            <div class="mb-20">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h4 class="text-2xl font-semibold mb-4">Deep Work Training</h4>
+                        <p class="text-muted mb-4">
+                            Train one skill per day through a 2-hour focused session. Get detailed guidance on how to train each skill 
+                            through both insight (learning theory) and practice (real-world application). Level up your abilities intentionally.
+                        </p>
+                        <ul class="space-y-2 text-sm text-muted">
+                            <li>✓ Structured 2-hour training blocks</li>
+                            <li>✓ Guided learning paths</li>
+                            <li>✓ XP rewards on completion</li>
+                        </ul>
+                    </div>
+                    <div class="bg-surface border border-border rounded-xl p-4 card-glow">
+                        <div class="text-center text-muted">
+                            <img src="{% static 'images/Deepwork.png' %}" alt="Deep Work" class="w-full h-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quests -->
+            <div class="mb-20">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="bg-surface border border-border rounded-xl p-4 card-glow md:order-2">
+                        <div class="text-center text-muted">
+                            <img src="{% static 'images/Quests.png' %}" alt="Quests" class="w-full h-auto">
+                        </div>
+                    </div>
+                    <div class="md:order-1">
+                        <h4 class="text-2xl font-semibold mb-4">Epic Quests</h4>
+                        <p class="text-muted mb-4">
+                            Set goals across four timescales: 10-year first and second phases, yearly, and monthly quests. Each completion 
+                            rewards massive XP. Miss a deadline? Your character faces a level penalty to keep you accountable.
+                        </p>
+                        <ul class="space-y-2 text-sm text-muted">
+                            <li>✓ Multiple quest tiers</li>
+                            <li>✓ Deadline tracking</li>
+                            <li>✓ Massive XP rewards</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Finance Tracking -->
+            <div class="mb-20">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h4 class="text-2xl font-semibold mb-4">Finance Bank</h4>
+                        <p class="text-muted mb-4">
+                            Track income, expenses, and loans. Monitor your real-world wealth as part of your character sheet. 
+                            See weekly spending patterns and download financial records anytime.
+                        </p>
+                        <ul class="space-y-2 text-sm text-muted">
+                            <li>✓ Income and expense tracking</li>
+                            <li>✓ Loan management</li>
+                            <li>✓ Weekly/monthly reports</li>
+                        </ul>
+                    </div>
+                    <div class="bg-surface border border-border rounded-xl p-4 card-glow">
+                        <div class="text-center text-muted">
+                            <img src="{% static 'images/Bank.png' %}" alt="Bank" class="w-full h-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events Calendar -->
+            <div>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="bg-surface border border-border rounded-xl p-4 card-glow md:order-2">
+                        <div class="text-center text-muted">
+                            <img src="{% static 'images/Events.png' %}" alt="Events" class="w-full h-auto">
+                        </div>
+                    </div>
+                    <div class="md:order-1">
+                        <h4 class="text-2xl font-semibold mb-4">Life Calendar</h4>
+                        <p class="text-muted mb-4">
+                            Mark important dates — birthdays, anniversaries, milestones. Keep track of recurring yearly events and 
+                            one-time occasions all in one place.
+                        </p>
+                        <ul class="space-y-2 text-sm text-muted">
+                            <li>✓ Calendar view</li>
+                            <li>✓ Recurring and one-time events</li>
+                            <li>✓ Never miss a date</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Footer -->
+    <section class="px-12 py-20 border-t border-border">
+        <div class="max-w-3xl mx-auto text-center">
+            <h3 class="text-3xl font-display font-bold mb-6">Ready to Become Your Best Self?</h3>
+            <p class="text-lg text-muted mb-10">
+                Your epic journey begins with a single choice. Start today and transform your life into the adventure it deserves to be.
+            </p>
+            <div class="flex gap-4 justify-center">
+                <a href="{% url 'register' %}" class="px-8 py-3 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium text-lg">
+                    Create Account
+                </a>
+                <a href="{% url 'login' %}" class="px-8 py-3 border border-accent text-accent rounded-lg hover:bg-accent/10 transition font-medium text-lg">
+                    Sign In
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-border px-12 py-8 text-center text-muted text-sm">
+        <p>&copy; 2026 Revive. Life RPG for self-improvement.</p>
+    </footer>
 </div>
 {% endblock %}

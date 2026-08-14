@@ -10,11 +10,71 @@
 @source "../../../bank/templates";
 @source "../../../events/templates";
 
+
+@theme {
+    --color-bg: #060707;
+    --color-surface: #0D0F0F;
+    --color-surface-2: #161818;
+    --color-border: blue;
+    --color-text: #ECEDEE;
+    --color-muted: #9A9EA3;
+    --color-accent: #D6293E;
+    --color-input-border: #3FBFB0;
+
+    --font-display: "Fraunces", serif;
+    --font-body: "Inter", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+}
+
+@layer utilities {
+    .card-glow {
+        box-shadow:
+            0 0 0 1px color-mix(in srgb, var(--color-green-500) 60%, transparent),
+            0 0 12px 1px color-mix(in srgb, var(--color-blue-700) 35%, transparent),
+            0 0 28px 4px color-mix(in srgb, var(--color-green-700) 18%, transparent);
+        transition: box-shadow 0.3s ease;
+        animation: card-in 0.5s ease backwards;
+    }
+    .card-glow:hover {
+        box-shadow:
+            0 0 0 1px var(--color-blue-600),
+            0 0 16px 2px color-mix(in srgb, var(--color-blue-500) 55%, transparent),
+            0 0 40px 6px color-mix(in srgb, var(--color-blue-700) 30%, transparent);
+    }
+    .bg-dot-grid {
+        background-image: radial-gradient(circle, color-mix(in srgb, var(--color-text) 12%, transparent) 1px, transparent 1px);
+        background-size: 24px 24px;
+    }
+    .card-glow {
+        animation: card-in 0.5s ease backwards;
+    }
+    .card-glow:hover {
+        transform: translateY(-4px) scale(1.015);
+    }
+}
+
+@keyframes card-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
 @layer base {
+    html {
+        color-scheme: light;
+    }
+
     input, select, textarea {
-        @apply w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 text-white 
-               placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white 
-               focus:border-transparent;
+        @apply w-full px-4 py-2.5 rounded-lg bg-surface-2 text-text 
+               placeholder-muted focus:outline-none focus:ring-2 focus:ring-input-border 
+               focus:border-transparent font-body;
+        border: 1px solid var(--color-input-border) !important;
     }
 
     button {

@@ -1,4 +1,9 @@
 {% extends "base_authenticated.html" %}
+
+{% block page_header %}
+<h2 class="text-3xl font-display font-bold mb-2">Quests - "Without Ambition, What Is The Point Of Being A Being Human."</h2>
+{% endblock %}
+
 {% block title %}Quests{% endblock %}
 {% block page_content %}
 
@@ -10,35 +15,34 @@
     {% endfor %}
 {% endif %}
 
-<!-- Add Quest -->
-<div class="bg-gray-950 border border-gray-800 rounded-xl p-6 mb-8 max-w-xl">
-    <h3 class="text-lg font-semibold mb-4">Add Quest</h3>
-    <form method="post" class="space-y-4">
-        {% csrf_token %}
-        {% for field in form %}
-            <div>
-                <label class="block text-sm text-gray-400 mb-1">{{ field.label }}</label>
-                {{ field }}
-            </div>
-        {% endfor %}
-        <button type="submit" class="px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
-            Add Quest
-        </button>
-    </form>
-</div>
+<div class="grid md:grid-cols-6 gap-6">
 
-<!-- Category sections -->
-<div class="grid gap-6 max-w-3xl">
-    {% for cat_key, cat in categories.items %}
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+    <!-- Add Quest -->
+    <div class="md:col-span-2 bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <h3 class="text-xl font-display font-semibold mb-4">Add Quest</h3>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm text-muted mb-1">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="px-5 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium">
+                Add Quest
+            </button>
+        </form>
+    </div>
+
+    <!-- 10yr 1st Half -->
+    <div class="md:col-span-2 bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold">{{ cat.label }}</h3>
-            <span class="text-sm text-gray-400">{{ cat.count }} / {{ cat.limit }}</span>
+            <h3 class="text-xl font-display font-semibold">{{ categories.ten_year_first.label }}</h3>
+            <span class="text-sm text-muted">{{ categories.ten_year_first.count }} / {{ categories.ten_year_first.limit }}</span>
         </div>
-
         <table class="w-full text-sm">
             <thead>
-                <tr class="text-left text-gray-400 border-b border-gray-800">
+                <tr class="text-left text-muted border-b border-teal-500">
                     <th class="py-2 pr-2">S.No.</th>
                     <th class="py-2 pr-2">Title</th>
                     <th class="py-2 pr-2">Deadline</th>
@@ -46,27 +50,131 @@
                 </tr>
             </thead>
             <tbody>
-                {% for quest in cat.quests %}
-                <tr class="border-b border-gray-900">
+                {% for quest in categories.ten_year_first.quests %}
+                <tr class="border-b border-teal-500">
                     <td class="py-2 pr-2">{{ forloop.counter }}</td>
                     <td class="py-2 pr-2">{{ quest.title }}</td>
-                    <td class="py-2 pr-2 text-gray-500">{{ quest.deadline }}</td>
+                    <td class="py-2 pr-2 text-muted">{{ quest.deadline }}</td>
                     <td class="py-2">
                         <form method="post" action="{% url 'complete_quest' quest.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="px-3 py-1 bg-white text-black rounded-lg text-xs hover:bg-gray-200 transition">
-                                Complete
-                            </button>
+                            <button type="submit" class="px-3 py-1 bg-bg text-text border border-red-500 rounded-lg text-xs hover:border-accent transition">Complete</button>
                         </form>
                     </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="4" class="py-4 text-gray-500 text-center">No active quests.</td></tr>
+                <tr><td colspan="4" class="py-4 text-muted text-center">No active quests.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    {% endfor %}
+
+    <!-- 10yr 2nd Half -->
+    <div class="md:col-span-2 bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-display font-semibold">{{ categories.ten_year_second.label }}</h3>
+            <span class="text-sm text-muted">{{ categories.ten_year_second.count }} / {{ categories.ten_year_second.limit }}</span>
+        </div>
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-muted border-b border-teal-500">
+                    <th class="py-2 pr-2">S.No.</th>
+                    <th class="py-2 pr-2">Title</th>
+                    <th class="py-2 pr-2">Deadline</th>
+                    <th class="py-2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quest in categories.ten_year_second.quests %}
+                <tr class="border-b border-teal-500">
+                    <td class="py-2 pr-2">{{ forloop.counter }}</td>
+                    <td class="py-2 pr-2">{{ quest.title }}</td>
+                    <td class="py-2 pr-2 text-muted">{{ quest.deadline }}</td>
+                    <td class="py-2">
+                        <form method="post" action="{% url 'complete_quest' quest.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="px-3 py-1 bg-bg text-text border border-red-500 rounded-lg text-xs hover:border-accent transition">Complete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="py-4 text-muted text-center">No active quests.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Yearly -->
+    <div class="md:col-span-3 bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-display font-semibold">{{ categories.yearly.label }}</h3>
+            <span class="text-sm text-muted">{{ categories.yearly.count }} / {{ categories.yearly.limit }}</span>
+        </div>
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-muted border-b border-teal-500">
+                    <th class="py-2 pr-2">S.No.</th>
+                    <th class="py-2 pr-2">Title</th>
+                    <th class="py-2 pr-2">Deadline</th>
+                    <th class="py-2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quest in categories.yearly.quests %}
+                <tr class="border-b border-teal-500">
+                    <td class="py-2 pr-2">{{ forloop.counter }}</td>
+                    <td class="py-2 pr-2">{{ quest.title }}</td>
+                    <td class="py-2 pr-2 text-muted">{{ quest.deadline }}</td>
+                    <td class="py-2">
+                        <form method="post" action="{% url 'complete_quest' quest.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="px-3 py-1 bg-bg text-text border border-red-500 rounded-lg text-xs hover:border-accent transition">Complete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="py-4 text-muted text-center">No active quests.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Monthly -->
+    <div class="md:col-span-3 bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-display font-semibold">{{ categories.monthly.label }}</h3>
+            <span class="text-sm text-muted">{{ categories.monthly.count }} / {{ categories.monthly.limit }}</span>
+        </div>
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-muted border-b border-teal-500">
+                    <th class="py-2 pr-2">S.No.</th>
+                    <th class="py-2 pr-2">Title</th>
+                    <th class="py-2 pr-2">Deadline</th>
+                    <th class="py-2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quest in categories.monthly.quests %}
+                <tr class="border-b border-teal-500">
+                    <td class="py-2 pr-2">{{ forloop.counter }}</td>
+                    <td class="py-2 pr-2">{{ quest.title }}</td>
+                    <td class="py-2 pr-2 text-muted">{{ quest.deadline }}</td>
+                    <td class="py-2">
+                        <form method="post" action="{% url 'complete_quest' quest.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="px-3 py-1 bg-bg text-text border border-red-500 rounded-lg text-xs hover:border-accent transition">Complete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="py-4 text-muted text-center">No active quests.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 {% endblock %}

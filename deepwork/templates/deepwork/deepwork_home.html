@@ -1,30 +1,35 @@
 {% extends "base_authenticated.html" %}
+
+{% block page_header %}
+<h2 class="text-3xl font-display font-bold mb-2">Skills - "Forge your Soul, your Body and your Mind ." </h2>
+{% endblock %}
+
 {% block title %}Deep Work{% endblock %}
 {% block page_content %}
 
 <h2 class="text-2xl font-bold mb-6">Deep Work</h2>
 
-<div id="messages" class="mb-4"></div>
+<div id="messages" class="mb-4">
 
 {% if completed_skills %}
 <div class="mb-6">
     <p class="text-sm text-gray-400 mb-2">Trained today:</p>
     <div class="flex gap-2 flex-wrap">
         {% for skill in completed_skills %}
-        <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded-lg text-xs">{{ skill.display_name }} ✓</span>
+        <span class="px-3 py-1 bg-surface text-gray-400 rounded-lg text-xs">{{ skill.display_name }} ✓</span>
         {% endfor %}
     </div>
 </div>
 {% endif %}
 
 {% if available_skills %}
-<div class="bg-gray-950 border border-gray-800 rounded-xl p-6 max-w-md" id="skill-picker">
+<div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow max-w-md" id="skill-picker">
     <h3 class="text-lg font-semibold mb-4">Today's Training</h3>
 
     <div class="space-y-2 mb-6" id="skill-options">
         {% for skill in available_skills %}
         <button type="button"
-            class="skill-select-btn w-full text-left px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg hover:border-white transition"
+            class="skill-select-btn w-full text-left px-4 py-3 bg-bg border border-border rounded-lg hover:border-white transition"
             data-skill-key="{{ skill.skill_key }}"
             data-skill-name="{{ skill.display_name }}">
             {{ skill.display_name }}
@@ -36,30 +41,70 @@
     <div id="organize-section" class="hidden mb-6">
         <p class="text-sm text-gray-400 mb-2">Organize break — get ready to train <span id="chosen-skill-name" class="text-white"></span></p>
         <div class="text-4xl font-mono mb-3" id="organize-timer">30:00</div>
-        <button type="button" id="start-organize-btn" class="px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
-            Start 30-min Organize Timer
-        </button>
-        <button type="button" id="skip-organize-btn" class="ml-2 px-5 py-2 border border-gray-700 rounded-lg hover:border-white transition">
-            Skip to Training
-        </button>
+            <div class="flex gap-3">
+                <button type="button" id="start-organize-btn" class="px-5 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium">
+                    Start 30-min Organize Timer
+                </button>
+                <button type="button" id="skip-organize-btn" class="px-5 py-2  bg-accent text-white rounded-lg hover:opacity-90 transition font-medium">
+                    Skip to Training
+                </button>
+            </div>
     </div>
 
     <!-- 2hr training timer -->
     <div id="training-section" class="hidden">
-        <p class="text-sm text-gray-400 mb-2">Training: <span id="training-skill-name" class="text-white"></span></p>
+        <p class="text-sm text-muted mb-2">Training: <span id="training-skill-name" class="text-text"></span></p>
         <div class="text-4xl font-mono mb-3" id="training-timer">2:00:00</div>
-        <button type="button" id="start-training-btn" class="px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
+        <button type="button" id="start-training-btn" class="px-5 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium">
             Start 2-hour Training
         </button>
-        <p class="text-xs text-yellow-500 mt-3 hidden" id="warning-text">
+        <p class="text-xs text-accent mt-3 hidden" id="warning-text">
             Keep this tab open. Closing or navigating away will lose progress.
         </p>
     </div>
 </div>
+
+<!-- Training Guide (updates when skill selected) -->
+<div id="guide-container" class="hidden">
+    {% for skill_key, guide in training_guides.items %}
+    <div class="bg-surface rounded-xl p-6 card-glow mt-6 max-w-3xl guide-card" data-skill-key="{{ skill_key }}">
+        <h3 class="text-xl font-display font-semibold mb-6">How to Train</h3>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Insight -->
+            <div>
+                <h4 class="text-lg font-semibold text-accent mb-3">Insight (Learn)</h4>
+                <ul class="space-y-2 text-sm">
+                    {% for tip in guide.insight %}
+                    <li class="flex gap-2">
+                        <span class="text-accent">•</span>
+                        <span>{{ tip }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!-- Practice -->
+            <div>
+                <h4 class="text-lg font-semibold text-accent mb-3">Practice (Apply)</h4>
+                <ul class="space-y-2 text-sm">
+                    {% for tip in guide.practice %}
+                    <li class="flex gap-2">
+                        <span class="text-accent">•</span>
+                        <span>{{ tip }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% elif all_done %}
-<p class="text-gray-400">All of today's training is complete. Come back tomorrow.</p>
+<p class="text-muted">All of today's training is complete. Come back tomorrow.</p>
 {% else %}
-<p class="text-gray-400">No training scheduled for today.</p>
+<p class="text-muted">No training scheduled for today.</p>
 {% endif %}
 
 <script>
@@ -75,9 +120,18 @@ document.querySelectorAll('.skill-select-btn').forEach(btn => {
         document.getElementById('training-skill-name').textContent = chosenSkillName;
         document.getElementById('skill-options').classList.add('hidden');
         document.getElementById('organize-section').classList.remove('hidden');
+        
+        // Show/hide guide for selected skill
+        document.querySelectorAll('.guide-card').forEach(card => {
+            card.classList.add('hidden');
+        });
+        const selectedGuide = document.querySelector(`.guide-card[data-skill-key="${chosenSkillKey}"]`);
+        if (selectedGuide) {
+            selectedGuide.classList.remove('hidden');
+        }
+        document.getElementById('guide-container').classList.remove('hidden');
     });
 });
-
 document.getElementById('skip-organize-btn').addEventListener('click', () => {
     document.getElementById('organize-section').classList.add('hidden');
     document.getElementById('training-section').classList.remove('hidden');
@@ -136,11 +190,11 @@ function finishTraining() {
     .then(data => {
         if (data.success) {
             document.getElementById('messages').innerHTML =
-                `<p class="text-green-400 text-sm">Training complete! +${data.xp_earned} ${data.skill_name} XP</p>`;
+                `<p class="text-accent text-sm">Training complete! +${data.xp_earned} ${data.skill_name} XP</p>`;
             setTimeout(() => location.reload(), 1500);
         } else {
             document.getElementById('messages').innerHTML =
-                `<p class="text-red-400 text-sm">${data.error}</p>`;
+                `<p class="text-accent text-sm">${data.error}</p>`;
         }
     });
 }

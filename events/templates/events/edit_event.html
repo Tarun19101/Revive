@@ -1,10 +1,15 @@
 {% extends "base_authenticated.html" %}
+
+{% block page_header %}
+<h2 class="text-3xl font-display font-bold mb-2">Events - "The more you remember, the more clues you have." </h2>
+{% endblock %}
+
 {% block title %}Edit Event{% endblock %}
 {% block page_content %}
 
 <h2 class="text-2xl font-bold mb-6">Edit Event</h2>
 
-<div class="bg-gray-950 border border-gray-800 rounded-xl p-6 max-w-xl">
+<div class="bg-surface border border-border rounded-xl p-6 max-w-xl hover:border-accent card-glow">
     <form method="post" class="space-y-4">
         {% csrf_token %}
         {% for field in form %}

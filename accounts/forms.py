@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import PlayerProfile, PlayerRecord
+from .models import PlayerProfile, PlayerRecord, PlayerAchievement
 from .constants import CHOICE_OPTIONS
 
 class RegisterForm(UserCreationForm):
@@ -36,3 +36,11 @@ class PlayerRecordForm(forms.ModelForm):
             'text': forms.Textarea(attrs={'rows': 6, 'placeholder': "What happened today?"}),
         }
 
+class AchievementForm(forms.ModelForm):
+    class Meta:
+        model = PlayerAchievement
+        fields = [
+            'bench_press', 'shoulder_press', 'deadlift', 'weighted_squats',
+            'max_pushups', 'max_pullups', 'max_russian_crunches',
+            'run_5km_minutes', 'run_5km_seconds',
+        ]

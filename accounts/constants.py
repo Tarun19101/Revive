@@ -38,7 +38,7 @@ CHOICE_OPTIONS = {
         'Taekwondo', 'Wrestling', 'Kung Fu', 'Krav Maga', 'Aikido', 'Jeet Kune Do',
     ],
     'weapon': [
-        'Sword', 'Bow', 'Guns'
+        'Sword', 'Bow', 'Guns',
         'Spear', 'Dagger', 'Axe', 'Mace', 'Hammer',
         'Nunchaku', 'Whip',
     ],

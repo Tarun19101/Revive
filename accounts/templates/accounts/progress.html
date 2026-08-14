@@ -1,12 +1,17 @@
 {% extends "base_authenticated.html" %}
+
+{% block page_header %}
+<h2 class="text-3xl font-display font-bold mb-2">Progress - "Power Matters Most." </h2>
+{% endblock %}
+
 {% block title %}Progress{% endblock %}
 {% block page_content %}
 
 <h2 class="text-2xl font-bold mb-8">Player Progress</h2>
 
-<div class="grid gap-6 max-w-2xl">
+<div class="grid grid-cols-2 grid-rows-3 grid-flow-col gap-6 max-w-4xl">
     {% for attr in grouped %}
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+    <div class="bg-bg border border-border rounded-xl p-6 hover:border-accent card-glow">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-semibold">{{ attr.name }}</h3>
             <span class="text-sm text-gray-400">Level {{ attr.level }}</span>
@@ -19,8 +24,8 @@
                     <span class="text-sm">{{ skill.display_name }}</span>
                     <span class="text-xs text-gray-500">Lvl {{ skill.level }}</span>
                 </div>
-                <div class="w-full bg-gray-800 rounded-full h-2 mb-1">
-                    <div class="bg-white h-2 rounded-full" style="width: {{ skill.xp_progress_percent }}%"></div>
+                <div class="w-full bg-gray-300 rounded-full h-2 mb-1">
+                    <div class="bg-blue-500 h-2 rounded-full" style="width: {{ skill.xp_progress_percent }}%"></div>
                 </div>
                 <p class="text-xs text-gray-500">{{ skill.xp }} / {{ skill.xp_for_next_level }} XP</p>
             </div>

@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm, OnboardingForm, ProfileEditForm, PlayerRecordForm
+from .forms import RegisterForm, OnboardingForm, ProfileEditForm, PlayerRecordForm, AchievementForm
+from .models import PlayerRecord, PlayerSkill, PlayerAchievement
 from bank.views import get_total_money
 from django.contrib import messages
 from django.http import HttpResponse
@@ -9,9 +10,8 @@ from datetime import date
 from .models import PlayerRecord, PlayerSkill, get_attribute_levels
 from .constants import ATTRIBUTE_SKILLS
 
+
 def index(request):
-    if request.user.is_authenticated:
-        return redirect('dashboard')
     return render(request, 'accounts/index.html')
 
 
@@ -58,10 +58,10 @@ def onboarding(request):
 @login_required
 def profile(request):
     profile = request.user.profile
-    today_record = PlayerRecord.objects.filter(user=request.user, date=date.today()).first()
+    achievements = request.user.achievements
 
     form = ProfileEditForm(instance=profile)
-    record_form = PlayerRecordForm()
+    achievement_form = AchievementForm(instance=achievements)
 
     if request.method == 'POST':
         if 'profile_submit' in request.POST:
@@ -71,24 +71,20 @@ def profile(request):
                 messages.success(request, 'Profile updated.')
                 return redirect('profile')
 
-        elif 'record_submit' in request.POST:
-            if not today_record:
-                record_form = PlayerRecordForm(request.POST)
-                if record_form.is_valid():
-                    record = record_form.save(commit=False)
-                    record.user = request.user
-                    record.save()
-                    return redirect('profile')
+        elif 'achievement_submit' in request.POST:
+            achievement_form = AchievementForm(request.POST, instance=achievements)
+            if achievement_form.is_valid():
+                achievement_form.save()
+                messages.success(request, 'Achievements updated.')
+                return redirect('profile')
 
     context = {
         'profile': profile,
         'form': form,
-        'record_form': record_form,
-        'today_record': today_record,
+        'achievement_form': achievement_form,
         'total_money': get_total_money(request.user),
     }
     return render(request, 'accounts/profile.html', context)
-
 
 @login_required
 def download_records(request):

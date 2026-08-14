@@ -3,30 +3,35 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 from datetime import date
-from .constants import DAY_SKILLS, TRAINING_XP
 from .models import TrainingLog
 from accounts.models import PlayerSkill
-
+from .constants import DAY_SKILLS, TRAINING_XP, TRAINING_GUIDES
 
 @login_required
 def deepwork_home(request):
     today = date.today()
     weekday = today.weekday()
     scheduled_keys = DAY_SKILLS.get(weekday, [])
-
     trained_today = set(
         TrainingLog.objects.filter(user=request.user, date=today)
         .values_list('skill_key', flat=True)
     )
-
     available_keys = [k for k in scheduled_keys if k not in trained_today]
     available_skills = PlayerSkill.objects.filter(user=request.user, skill_key__in=available_keys)
     completed_skills = PlayerSkill.objects.filter(user=request.user, skill_key__in=trained_today & set(scheduled_keys))
-
+    
+    # Get training guides for all available skills
+    training_guides = {}
+    for skill in available_skills:
+        guide = TRAINING_GUIDES.get(skill.skill_key)
+        if guide:
+            training_guides[skill.skill_key] = guide
+    
     context = {
         'available_skills': available_skills,
         'completed_skills': completed_skills,
         'all_done': len(available_keys) == 0 and len(scheduled_keys) > 0,
+        'training_guides': training_guides,
     }
     return render(request, 'deepwork/deepwork_home.html', context)
 

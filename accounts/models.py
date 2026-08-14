@@ -99,6 +99,26 @@ class PlayerSkill(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.name}"
 
+
+class PlayerAchievement(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='achievements')
+
+    bench_press = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    shoulder_press = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    deadlift = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    weighted_squats = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+
+    max_pushups = models.PositiveIntegerField(null=True, blank=True)
+    max_pullups = models.PositiveIntegerField(null=True, blank=True)
+    max_russian_crunches = models.PositiveIntegerField(null=True, blank=True)
+
+    run_5km_minutes = models.PositiveIntegerField(null=True, blank=True)
+    run_5km_seconds = models.PositiveIntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s achievements"
+    
+
 def get_attribute_levels(user):
     """Returns dict: attribute_key -> {name, level} computed from PlayerSkill levels."""
     skills = {s.skill_key: s for s in user.skills.all()}

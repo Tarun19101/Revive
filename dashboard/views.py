@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from datetime import date
-
+from accounts.models import get_attribute_levels
 from tasks.models import Task
 from habits.models import PlayerHabit
 from quests.models import Quest
@@ -36,6 +36,7 @@ def dashboard(request):
         'habits': habits,
         'monthly_quest': monthly_quest,
         'monthly_expense': get_monthly_expense(request.user),
-        'this_month_events': this_month_events[:5],  # limit to 5 for the card
+        'this_month_events': this_month_events[:5],
+        'attribute_levels': get_attribute_levels(request.user),
     }
     return render(request, 'dashboard/dashboard.html', context)

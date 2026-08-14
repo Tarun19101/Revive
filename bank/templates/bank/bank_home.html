@@ -1,5 +1,11 @@
 {% extends "base_authenticated.html" %}
+
+{% block page_header %}
+<h2 class="text-3xl font-display font-bold mb-2">Bank - "Everything has a value." </h2>
+{% endblock %}
+
 {% block title %}Bank{% endblock %}
+
 {% block page_content %}
 
 <h2 class="text-2xl font-bold mb-6">Bank</h2>
@@ -10,27 +16,27 @@
     {% endfor %}
 {% endif %}
 
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 <!-- Add Entry -->
-<div class="bg-gray-950 border border-gray-800 rounded-xl p-6 mb-8 max-w-xl">
-    <h3 class="text-lg font-semibold mb-4">Add Entry</h3>
-    <form method="post" class="space-y-4">
-        {% csrf_token %}
-        {% for field in form %}
-            <div>
-                <label class="block text-sm text-gray-400 mb-1">{{ field.label }}</label>
-                {{ field }}
-            </div>
-        {% endfor %}
-        <button type="submit" class="px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition font-medium">
-            Add
-        </button>
-    </form>
-</div>
+    <div class="bg-surface border border-border rounded-xl p-6  hover:border-accent card-glow">
+        <h3 class="text-lg font-semibold mb-4">Add Entry</h3>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="px-5 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium">
+                Add
+            </button>
+        </form>
+    </div>
 
-<div class="grid md:grid-cols-2 gap-6 max-w-4xl">
 
     <!-- Income -->
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
         <h3 class="text-lg font-semibold mb-4">Income</h3>
         <table class="w-full text-sm">
             <thead>
@@ -54,10 +60,13 @@
                 {% endfor %}
             </tbody>
         </table>
+        <a href="{% url 'download_income' %}" class="inline-block mt-3 text-sm text-accent underline hover:text-accent/80">
+            Download (.md)
+        </a>
     </div>
 
     <!-- Expense -->
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
         <h3 class="text-lg font-semibold mb-4">Expense</h3>
         <table class="w-full text-sm">
             <thead>
@@ -65,7 +74,7 @@
                     <th class="py-2 pr-2">Person</th>
                     <th class="py-2 pr-2">Reason</th>
                     <th class="py-2 pr-2">Amount</th>
-                    <th class="py-2">Date</th>
+                    <th class="py-3 px-9">Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,10 +90,13 @@
                 {% endfor %}
             </tbody>
         </table>
+        <a href="{% url 'download_expenses' %}" class="inline-block mt-3 text-sm text-accent underline hover:text-accent/80">
+            Download (.md)
+        </a>
     </div>
 
     <!-- Loan Given -->
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
         <h3 class="text-lg font-semibold mb-4">Loan Given</h3>
         <table class="w-full text-sm">
             <thead>
@@ -119,14 +131,18 @@
                     </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="4" class="py-4 text-gray-500 text-center">No loans given.</td></tr>
+                <tr><td colspan="4" class="py-4 text-gray-500 text-center">No loans pending.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
+        </table>
+        <a href="{% url 'download_loans_given' %}" class="inline-block mt-3 text-sm text-accent underline hover:text-accent/80">
+            Download (.md)
+        </a>
     </div>
 
     <!-- Loan Taken -->
-    <div class="bg-gray-950 border border-gray-800 rounded-xl p-6">
+    <div class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
         <h3 class="text-lg font-semibold mb-4">Loan Taken</h3>
         <table class="w-full text-sm">
             <thead>
@@ -161,12 +177,15 @@
                     </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="4" class="py-4 text-gray-500 text-center">No loans taken.</td></tr>
+                <tr><td colspan="4" class="py-4 text-gray-500 text-center">No loans pending.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
+        <a href="{% url 'download_loans_taken' %}" class="inline-block mt-3 text-sm text-accent underline hover:text-accent/80">
+            Download (.md)
+        </a>
     </div>
 
 </div>
-
+</div>
 {% endblock %}
