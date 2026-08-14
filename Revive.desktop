@@ -2,7 +2,7 @@
 Type=Application
 Name=Revive
 Comment=Life RPG Self-Improvement App
-Exec=bash -c "cd /home/tarun/Games/Revive && source .venv/bin/activate && python manage.py runserver"
+Exec=gnome-terminal -- /home/tarun/Games/Revive/run_revive.sh
 Icon=utilities-terminal
-Terminal=true
+Terminal=false
 Categories=Development;
