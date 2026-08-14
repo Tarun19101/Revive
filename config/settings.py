@@ -1,14 +1,9 @@
 import os
+import dj_database_url
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-fallback-key-change-this')
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
@@ -72,7 +67,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 if os.getenv('DATABASE_URL'):
-    import dj_database_url
     DATABASES['default'] = dj_database_url.config()
 
 
