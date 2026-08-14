@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Revive Tailwind
+Comment=Tailwind CSS Watcher for Revive
+Exec=bash -c "cd /home/tarun/Games/Revive && source .venv/bin/activate && python manage.py tailwind start"
+Icon=utilities-terminal
+Terminal=true
+Categories=Development;
