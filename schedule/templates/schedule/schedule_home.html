@@ -34,12 +34,119 @@
         {% if schedule %}
             <!-- STEP 5: the saved week goes here -->
         {% else %}
-            <!-- STEP 4: the empty-state note and the editor form go here -->
+                        <p id="schedule-empty" class="text-sm text-muted mt-6">
+                Nothing planned for this week yet. Create the schedule to fill in every hour from Sunday to Saturday.
+            </p>
+
+            <form method="post" action="{% url 'schedule_create' %}" id="schedule-editor" class="hidden mt-6">
+                {% csrf_token %}
+                <div class="flex flex-wrap gap-2 mb-5" role="tablist" aria-label="Day of the week">
+                    {% for day in editor_days %}
+                        <button type="button" role="tab" data-day-tab="{{ day.index }}" title="{{ day.name }}"
+                            class="px-3 py-1.5 rounded-lg border text-sm transition">{{ day.short }}</button>
+                    {% endfor %}
+                </div>
+
+                {% for day in editor_days %}
+                    <div role="tabpanel" data-day-panel="{{ day.index }}" class="hidden space-y-2">
+                        <h4 class="font-semibold mb-3">{{ day.name }}</h4>
+                        {% for row in day.rows %}
+                        <label class="grid grid-cols-[10.5rem_1fr] items-center gap-3">
+                            <span class="text-sm text-muted font-mono">{{ row.label }}</span>
+                            <input type="text" name="{{ row.field }}" maxlength="{{ max_slot_length }}" autocomplete="off">
+                        </label>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="px-5 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium">
+                        Save week
+                    </button>
+                    <button type="button" id="cancel-schedule-btn"
+                        class="px-5 py-2 bg-bg text-text border border-input-border rounded-lg hover:border-accent transition font-medium">
+                        Cancel
+                    </button>
+                </div>
+            </form>
         {% endif %}
     </section>
 
     <!-- STEP 6: the tasks section goes here -->
 
 </div>
+<script>
+(function () {
+    var ACTIVE = ['text-accent', 'border-accent', 'bg-surface-2'];
+    var IDLE = ['text-muted', 'border-input-border'];
 
+    // Day buttons (Sun to Sat) show one day panel at a time.
+    function initDayTabs(root, defaultDay) {
+        var tabs = root.querySelectorAll('[data-day-tab]');
+        var panels = root.querySelectorAll('[data-day-panel]');
+
+        function show(day) {
+            tabs.forEach(function (tab) {
+                var on = tab.dataset.dayTab === day;
+                ACTIVE.forEach(function (c) { tab.classList.toggle(c, on); });
+                IDLE.forEach(function (c) { tab.classList.toggle(c, !on); });
+                tab.setAttribute('aria-selected', on ? 'true' : 'false');
+            });
+            panels.forEach(function (panel) {
+                panel.classList.toggle('hidden', panel.dataset.dayPanel !== day);
+            });
+        }
+
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () { show(tab.dataset.dayTab); });
+        });
+        show(String(defaultDay));
+    }
+
+    // STEP 5: the viewer's tabs get started here
+
+    var editor = document.getElementById('schedule-editor');
+    var openBtn = document.getElementById('create-schedule-btn');
+    var emptyNote = document.getElementById('schedule-empty');
+    if (!editor || !openBtn) return;
+
+    initDayTabs(editor, 0);
+
+    var dirty = false;
+    var saving = false;
+    editor.addEventListener('input', function () { dirty = true; });
+    editor.addEventListener('submit', function () { saving = true; });
+
+    // 168 fields is a lot to lose to a stray refresh or link click.
+    window.addEventListener('beforeunload', function (e) {
+        if (dirty && !saving) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    // Enter moves to the next hour instead of saving the whole week by accident.
+    editor.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' || e.target.tagName !== 'INPUT') return;
+        e.preventDefault();
+        var panel = e.target.closest('[data-day-panel]');
+        var inputs = Array.prototype.slice.call(panel.querySelectorAll('input'));
+        var next = inputs[inputs.indexOf(e.target) + 1];
+        if (next) next.focus();
+    });
+
+    function setOpen(open) {
+        editor.classList.toggle('hidden', !open);
+        openBtn.classList.toggle('hidden', open);
+        if (emptyNote) emptyNote.classList.toggle('hidden', open);
+    }
+
+    openBtn.addEventListener('click', function () { setOpen(true); });
+    document.getElementById('cancel-schedule-btn').addEventListener('click', function () {
+        editor.reset();
+        dirty = false;
+        setOpen(false);
+    });
+})();
+</script>
 {% endblock %}
