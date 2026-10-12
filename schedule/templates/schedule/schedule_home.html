@@ -48,14 +48,17 @@
                 </div>
 
                 {% for day in editor_days %}
-                    <div role="tabpanel" data-day-panel="{{ day.index }}" class="hidden space-y-2">
+                                        <div role="tabpanel" data-day-panel="{{ day.index }}" class="hidden">
                         <h4 class="font-semibold mb-3">{{ day.name }}</h4>
-                        {% for row in day.rows %}
-                        <label class="grid grid-cols-[10.5rem_1fr] items-center gap-3">
-                            <span class="text-sm text-muted font-mono">{{ row.label }}</span>
-                            <input type="text" name="{{ row.field }}" maxlength="{{ max_slot_length }}" autocomplete="off">
-                        </label>
-                        {% endfor %}
+                        <!-- 24 hours in two halves: the first 12 fill the left column, the last 12 the right -->
+                        <div class="grid grid-flow-col grid-rows-12 gap-x-6 gap-y-3">
+                            {% for row in day.rows %}
+                            <label class="block">
+                                <span class="block text-xs text-muted font-mono mb-1">{{ row.label }}</span>
+                                <input type="text" name="{{ row.field }}" maxlength="{{ max_slot_length }}" autocomplete="off">
+                            </label>
+                            {% endfor %}
+                        </div>
                     </div>
                 {% endfor %}
 
