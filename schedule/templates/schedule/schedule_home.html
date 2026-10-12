@@ -1,0 +1,45 @@
+{% extends "base_authenticated.html" %}
+
+{% block page_header %}
+<h2 class="text-3xl font-display font-bold mb-2">Schedule - "To Move Forward, The Only Thing You Can Do Is Work." </h2>
+{% endblock %}
+
+{% block title %}Schedule{% endblock %}
+{% block page_content %}
+
+<h2 class="text-2xl font-bold mb-6">Schedule</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <p class="text-sm mb-4 {% if message.tags == 'error' %}text-red-400{% else %}text-green-400{% endif %}">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<div class="grid md:grid-cols-2 gap-6 items-start">
+
+    <!-- Weekly schedule -->
+    <section class="bg-surface border border-border rounded-xl p-6 hover:border-accent card-glow">
+        <h3 class="text-xl font-display font-semibold mb-1">This Week</h3>
+        <p class="text-sm text-muted font-mono mb-5">Week of {{ week_start|date:"D, j M" }}</p>
+
+        <button type="button" id="create-schedule-btn"
+            class="px-5 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+            {% if schedule %}disabled{% endif %}>
+            Create this week's schedule
+        </button>
+        {% if schedule %}
+            <p class="text-sm text-muted mt-3">This week is planned. You can create the next schedule on {{ next_sunday|date:"l, j M" }}.</p>
+        {% endif %}
+
+        {% if schedule %}
+            <!-- STEP 5: the saved week goes here -->
+        {% else %}
+            <!-- STEP 4: the empty-state note and the editor form go here -->
+        {% endif %}
+    </section>
+
+    <!-- STEP 6: the tasks section goes here -->
+
+</div>
+
+{% endblock %}

@@ -9,6 +9,7 @@
 @source "../../../deepwork/templates";
 @source "../../../bank/templates";
 @source "../../../events/templates";
+@source "../../../schedule/templates";
 
 
 @theme {
