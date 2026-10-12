@@ -4,5 +4,5 @@ Name=Revive
 Comment=Life RPG Self-Improvement App
 Exec=gnome-terminal -- /home/tarun/Games/Revive/run_revive.sh
 Icon=utilities-terminal
-Terminal=false
+Terminal=true
 Categories=Development;

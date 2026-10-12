@@ -12,14 +12,14 @@
 
 
 @theme {
-    --color-bg: #060707;
-    --color-surface: #0D0F0F;
-    --color-surface-2: #161818;
-    --color-border: blue;
-    --color-text: #ECEDEE;
-    --color-muted: #9A9EA3;
-    --color-accent: #D6293E;
-    --color-input-border: #3FBFB0;
+    --color-bg: #f5fcfc;
+    --color-surface: #ddecec;
+    --color-surface-2: #e7f6f6;
+    --color-border: #2c2c87;
+    --color-text: #000000;
+    --color-muted: #696c70;
+    --color-accent: #da1029;
+    --color-input-border: #878b8f;
 
     --font-display: "Fraunces", serif;
     --font-body: "Inter", sans-serif;
@@ -42,7 +42,7 @@
             0 0 40px 6px color-mix(in srgb, var(--color-blue-700) 30%, transparent);
     }
     .bg-dot-grid {
-        background-image: radial-gradient(circle, color-mix(in srgb, var(--color-text) 12%, transparent) 1px, transparent 1px);
+        background-image: radial-gradient(circle, color-mix(in srgb, var(--color-text) 30%, transparent) 1px, transparent 1px);
         background-size: 24px 24px;
     }
     .card-glow {
