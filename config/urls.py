@@ -27,7 +27,6 @@ urlpatterns = [
     path('', include('quests.urls')),
     path('', include('deepwork.urls')),
     path('', include('bank.urls')),
-    path('', include('events.urls')),
     path('', include('schedule.urls')),
     path('test/', TemplateView.as_view(template_name='test.html')),
     path("__reload__/", include("django_browser_reload.urls")),

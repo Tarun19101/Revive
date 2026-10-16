@@ -3,12 +3,10 @@
 @source "../../../templates";
 @source "../../../accounts/templates";
 @source "../../../dashboard/templates";
-@source "../../../tasks/templates";
 @source "../../../habits/templates";
 @source "../../../quests/templates";
 @source "../../../deepwork/templates";
 @source "../../../bank/templates";
-@source "../../../events/templates";
 @source "../../../schedule/templates";
 
 

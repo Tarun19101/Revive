@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block page_content %}
-{% block title %}{{ request.user.username }}{% endblock %}
 
 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
 
@@ -37,21 +36,19 @@
     </div>
 
     
-    <!-- This Month's Events -->
+    <!-- Now & Next -->
     <div class="bg-surface border border-border rounded-xl p-8 hover:border-accent card-glow">
-        <h3 class="text-xl font-display font-semibold mb-6">This Month's Events</h3>
-        {% if this_month_events %}
-            <ul class="space-y-4 text-base">
-                {% for event in this_month_events %}
-                <li class="flex justify-between items-center">
-                    <span>{{ event.title }}</span>
-                    <span class="text-sm text-muted font-mono">{{ event.date.day }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p class="text-muted text-base">No events this month.</p>
-        {% endif %}
+        <h3 class="text-xl font-display font-semibold mb-6">Now &amp; Next</h3>
+        <ul class="space-y-5 text-base">
+            <li class="flex flex-col gap-1">
+                <span class="text-sm text-accent font-mono">Now: {{ hour_now.label }}</span>
+                {% if hour_now.text %}<span class="truncate">{{ hour_now.text }}</span>{% else %}<span class="text-muted">Nothing planned</span>{% endif %}
+            </li>
+            <li class="flex flex-col gap-1">
+                <span class="text-sm text-muted font-mono">Next: {{ hour_next.label }}</span>
+                {% if hour_next.text %}<span class="truncate">{{ hour_next.text }}</span>{% else %}<span class="text-muted">Nothing planned</span>{% endif %}
+            </li>
+        </ul>
     </div>
 
 
@@ -75,20 +72,20 @@
         {% endif %}
     </div>
 
-    <!-- Today's Tasks -->
+    <!-- Pending Tasks -->
     <div class="bg-surface border border-border rounded-xl p-8 hover:border-accent card-glow">
-        <h3 class="text-xl font-display font-semibold mb-6">Today's Tasks</h3>
-        {% if today_tasks %}
+        <h3 class="text-xl font-display font-semibold mb-6">Pending Tasks</h3>
+        {% if pending_tasks %}
             <ul class="space-y-4 text-base">
-                {% for task in today_tasks %}
-                <li class="flex justify-between items-center gap-4">
-                    <span class="truncate">{{ task.title }}</span>
-                    <span class="shrink-0 text-sm px-2.5 py-1 rounded-full border border-border text-muted">{{ task.get_type_display }}</span>
-                </li>
+                {% for task in pending_tasks %}
+                <li class="truncate">{{ task.title }}</li>
                 {% endfor %}
             </ul>
+            {% if pending_task_count > 5 %}
+                <p class="text-sm text-muted font-mono mt-4">+{{ pending_task_count|add:"-5" }} more</p>
+            {% endif %}
         {% else %}
-            <p class="text-muted text-base">No pending tasks today.</p>
+            <p class="text-muted text-base">No pending tasks.</p>
         {% endif %}
     </div>
 

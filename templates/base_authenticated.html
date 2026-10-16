@@ -24,7 +24,6 @@
                 {% if request.path == progress_url %}text-accent border border-accent bg-surface-2{% else %}text-muted/70 hover:text-text hover:bg-surface-2{% endif %}">
                 Progress
             </a>
-            {% url 'task_list' as tasks_url %}
             {% url 'schedule' as schedule_url %}
             <a href="{{ schedule_url }}" class="block px-4 py-3 rounded-lg text-base transition
                 {% if request.path == schedule_url %}text-accent border border-accent bg-surface-2{% else %}text-muted/70 hover:text-text hover:bg-surface-2{% endif %}">
@@ -50,11 +49,7 @@
                 {% if request.path == bank_url %}text-accent border border-accent bg-surface-2{% else %}text-muted/70 hover:text-text hover:bg-surface-2{% endif %}">
                 Bank
             </a>
-            {% url 'event_list' as events_url %}
-            <a href="{{ events_url }}" class="block px-4 py-3 rounded-lg text-base transition
-                {% if request.path == events_url %}text-accent border border-accent bg-surface-2{% else %}text-muted/70 hover:text-text hover:bg-surface-2{% endif %}">
-                Events
-            </a>
+
         </nav>
 
         <div class="px-4 py-5 345">
@@ -71,7 +66,6 @@
     
 
     <!-- Main content -->
-    <!-- Main content -->
     <main class="flex-1 w-full overflow-y-auto flex flex-col">
         <div class="w-full px-12 pt-10">
             <div class="max-w-9xl bg-surface border border-green-500 rounded-xl px-5 py-5">
@@ -82,6 +76,7 @@
         </div>
         <div class="w-full flex-1 px-10 pt-6 pb-10">
             <div class="max-w-full">
+                <p class="text-sm text-muted font-mono mb-6">{% block title %}{{ current_time|date:"d-m-Y" }} ::: {{ current_time|date:"l" }} ::: {{ current_time|date:"h:i A"|lower }}{% endblock %}</p>
                 {% block page_content %}
                 {% endblock %}
             </div>
