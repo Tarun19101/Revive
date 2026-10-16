@@ -25,9 +25,10 @@
                 Progress
             </a>
             {% url 'task_list' as tasks_url %}
-            <a href="{{ tasks_url }}" class="block px-4 py-3 rounded-lg text-base transition
-                {% if request.path == tasks_url %}text-accent border border-accent bg-surface-2{% else %}text-muted/70 hover:text-text hover:bg-surface-2{% endif %}">
-                Tasks
+            {% url 'schedule' as schedule_url %}
+            <a href="{{ schedule_url }}" class="block px-4 py-3 rounded-lg text-base transition
+                {% if request.path == schedule_url %}text-accent border border-accent bg-surface-2{% else %}text-muted/70 hover:text-text hover:bg-surface-2{% endif %}">
+                Schedule
             </a>
             {% url 'habit_list' as habits_url %}
             <a href="{{ habits_url }}" class="block px-4 py-3 rounded-lg text-base transition

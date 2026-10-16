@@ -1,51 +1,33 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from datetime import date
+from django.views.decorators.http import require_POST
 from .models import Task
 from .forms import TaskForm
 
 
 @login_required
-def task_list(request):
-    if request.method == 'POST':
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            task = form.save(commit=False)
-            task.user = request.user
-            task.save()
-            return redirect('task_list')
+@require_POST
+def add_task(request):
+    form = TaskForm(request.POST)
+    if form.is_valid():
+        task = form.save(commit=False)
+        task.user = request.user
+        task.save()
     else:
-        form = TaskForm()
-
-    today = date.today()
-    user_tasks = Task.objects.filter(user=request.user, status=Task.PENDING)
-
-    today_important = user_tasks.filter(type=Task.IMPORTANT, created_date=today)
-    today_casual = user_tasks.filter(type=Task.CASUAL, created_date=today)
-    pending = user_tasks.exclude(created_date=today)
-
-    context = {
-        'form': form,
-        'today_important': today_important,
-        'today_casual': today_casual,
-        'pending': pending,
-    }
-    return render(request, 'tasks/task_list.html', context)
+        messages.error(request, 'Enter a task title.')
+    return redirect('schedule')
 
 
 @login_required
+@require_POST
 def complete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
 
-    if task.status == Task.PENDING:
-        xp_earned = task.xp_reward
-
-        task.status = Task.COMPLETED
-        task.save()
-
+    # Flip pending -> completed in one query, so a double submit pays out once.
+    if Task.objects.filter(pk=task.pk, status=Task.PENDING).update(status=Task.COMPLETED):
         profile = request.user.profile
-        profile.xp += xp_earned
+        profile.xp += Task.XP_REWARD
 
         while profile.xp >= profile.xp_for_next_level:
             profile.xp -= profile.xp_for_next_level
@@ -53,6 +35,6 @@ def complete_task(request, task_id):
 
         profile.save()
 
-        messages.success(request, f'Task completed! +{xp_earned} XP')
+        messages.success(request, f'Task completed! +{Task.XP_REWARD} XP')
 
-    return redirect('task_list')
+    return redirect('schedule')

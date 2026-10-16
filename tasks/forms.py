@@ -5,5 +5,7 @@ from .models import Task
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['title', 'type']
-        
+        fields = ['title']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'What needs doing?'}),
+        }

@@ -9,6 +9,9 @@ from django.views.decorators.http import require_POST                # NEW
 from .models import ScheduleSlot, WeekSchedule                       # NEW: ScheduleSlot
 from .utils import DAYS, day_index, hour_label, now, week_start                # NEW: DAYS, hour_label
 
+from tasks.forms import TaskForm
+from tasks.models import Task
+
 # NEW: read the limit from the model so the form and the validation can't disagree.
 MAX_SLOT_LENGTH = ScheduleSlot._meta.get_field('text').max_length
 HOURS = [(h, hour_label(h)) for h in range(24)]                      # NEW
@@ -57,10 +60,13 @@ def schedule_home(request):
         'schedule': schedule,
         'week_start': start,
         'next_sunday': start + timedelta(days=7),
-        'today_index': today_index,      # NEW
+        'today_index': today_index,
         'editor_days': editor_days,
-        'view_days': view_days,          # NEW
+        'view_days': view_days,
         'max_slot_length': MAX_SLOT_LENGTH,
+        'tasks': Task.objects.filter(user=request.user, status=Task.PENDING),
+        'task_form': TaskForm(),
+        'task_xp': Task.XP_REWARD,
     }
     return render(request, 'schedule/schedule_home.html', context)
 # NEW: everything from here down
