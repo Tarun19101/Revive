@@ -76,7 +76,7 @@
         </div>
         <div class="w-full flex-1 px-10 pt-6 pb-10">
             <div class="max-w-full">
-                <p class="text-sm text-muted font-mono mb-6">{% block title %}{{ current_time|date:"d-m-Y" }} ::: {{ current_time|date:"l" }} ::: {{ current_time|date:"h:i A"|lower }}{% endblock %}</p>
+                <p class="text-md text-text font-mono mb-6 ">{% block title %}{{ current_time|date:"d-m-Y" }} ::: {{ current_time|date:"l" }} ::: {{ current_time|date:"h:i A"|lower }}{% endblock %}</p>
                 {% block page_content %}
                 {% endblock %}
             </div>
