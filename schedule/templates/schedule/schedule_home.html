@@ -32,8 +32,30 @@
         {% endif %}
 
         {% if schedule %}
-            <!-- STEP 5: the saved week goes here -->
-        {% else %}
+            <div id="schedule-viewer" class="mt-6" data-default-day="{{ today_index }}">
+                <div class="flex flex-wrap gap-2 mb-5" role="tablist" aria-label="Day of the week">
+                    {% for day in view_days %}
+                        <button type="button" role="tab" data-day-tab="{{ day.index }}" title="{{ day.name }}"
+                            class="px-3 py-1.5 rounded-lg border text-sm transition">{{ day.short }}</button>
+                    {% endfor %}
+                </div>
+
+                {% for day in view_days %}
+                    <div role="tabpanel" data-day-panel="{{ day.index }}" class="hidden">
+                        <h4 class="font-semibold mb-3">{{ day.name }}</h4>
+                        <table class="w-full text-sm">
+                            <tbody>
+                                {% for row in day.rows %}
+                                <tr class="border-b border-teal-500 {% if row.is_now %}bg-surface-2{% endif %}"{% if row.is_now %} aria-current="time"{% endif %}>
+                                    <td class="py-2 pr-3 pl-1 text-muted font-mono whitespace-nowrap">{{ row.label }}</td>
+                                    <td class="py-2 pr-1 {% if row.is_now %}text-accent font-medium{% endif %}">{{ row.text|default:"—" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+            </div>        {% else %}
                         <p id="schedule-empty" class="text-sm text-muted mt-6">
                 Nothing planned for this week yet. Create the schedule to fill in every hour from Sunday to Saturday.
             </p>
@@ -106,7 +128,10 @@
         show(String(defaultDay));
     }
 
-    // STEP 5: the viewer's tabs get started here
+    var viewer = document.getElementById('schedule-viewer');
+    if (viewer) {
+        initDayTabs(viewer, viewer.dataset.defaultDay);
+    }
 
     var editor = document.getElementById('schedule-editor');
     var openBtn = document.getElementById('create-schedule-btn');
