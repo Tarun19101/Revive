@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Revive - Life RPG Self-Improvement{% endblock %}
+{% block title %}Nightmare - Life RPG Self-Improvement{% endblock %}
 
 
 {% block content %}
@@ -8,7 +8,7 @@
     <!-- Navigation -->
     <nav class="border-b border-border px-12 py-6">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-display font-bold">REVIVE</h1>
+            <h1 class="text-2xl font-display font-bold">Nightmare</h1>
             <div class="flex gap-4">
                 {% if user.is_authenticated %}
                     <a href="{% url 'dashboard' %}" class="px-5 py-2 text-text hover:text-accent transition">Dashboard</a>
@@ -30,7 +30,7 @@
                 to show myself light.
             </h2>
             <p class="text-lg text-muted mb-10">
-                Revive is a life RPG that turns your self-improvement journey into an epic adventure. 
+                Nightmare is a life RPG that turns your self-improvement journey into an epic adventure. 
                 Track habits, train skills, complete quests, and level up your real-world character.
             </p>
             <div class="flex gap-4 justify-center">
@@ -44,15 +44,15 @@
         </div>
     </section>
 
-    <!-- Why Revive -->
+    <!-- Why Nightmare -->
     <section class="px-12 py-20 border-t border-border">
         <div class="max-w-4xl mx-auto">
-            <h3 class="text-3xl font-display font-bold mb-12 text-center">Why Revive?</h3>
+            <h3 class="text-3xl font-display font-bold mb-12 text-center">Why Nightmare?</h3>
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="space-y-4">
                     <h4 class="text-xl font-semibold text-accent">Gamify Your Life</h4>
                     <p class="text-muted">
-                        Stop treating personal growth like a chore. Revive transforms habits, fitness, learning, and projects into 
+                        Stop treating personal growth like a chore. Nightmare transforms habits, fitness, learning, and projects into 
                         quests with real rewards. Level up your character as you level up yourself.
                     </p>
                 </div>
@@ -231,7 +231,7 @@
 
     <!-- Footer -->
     <footer class="border-t border-border px-12 py-8 text-center text-muted text-sm">
-        <p>&copy; 2026 Revive. Life RPG for self-improvement.</p>
+        <p>&copy; 2026 Nightmare. Life RPG for self-improvement.</p>
     </footer>
 </div>
 {% endblock %}
