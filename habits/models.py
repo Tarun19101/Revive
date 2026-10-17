@@ -18,9 +18,6 @@ class PlayerHabit(models.Model):
     def name(self):
         return HABIT_CATALOG[self.habit_key]['name']
 
-    @property
-    def skill_key(self):
-        return HABIT_CATALOG[self.habit_key]['skill_key']
 
     @property
     def done_today(self):

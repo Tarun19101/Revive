@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import PlayerProfile, PlayerRecord, PlayerAchievement
-from .constants import CHOICE_OPTIONS
+
 
 class RegisterForm(UserCreationForm):
     class Meta:
@@ -11,9 +11,6 @@ class RegisterForm(UserCreationForm):
 
 
 class OnboardingForm(forms.ModelForm):
-    martial_art = forms.ChoiceField(choices=[(m, m) for m in CHOICE_OPTIONS['martial_art']])
-    weapon = forms.ChoiceField(choices=[(w, w) for w in CHOICE_OPTIONS['weapon']])
-    hobby = forms.ChoiceField(choices=[(h, h) for h in CHOICE_OPTIONS['hobby']])
 
     class Meta:
         model = PlayerProfile

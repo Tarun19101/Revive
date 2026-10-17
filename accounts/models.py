@@ -86,7 +86,19 @@ class PlayerSkill(models.Model):
 
     @property
     def xp_for_next_level(self):
+        # Reaching level N costs N x 100 XP: 100 for level 1, 200 for level 2, ...
         return (self.level + 1) * 100
+
+    def add_xp(self, amount):
+        """Add XP, level up as often as the XP allows, save. Returns the levels gained."""
+        self.xp += amount
+        gained = 0
+        while self.xp >= self.xp_for_next_level:
+            self.xp -= self.xp_for_next_level
+            self.level += 1
+            gained += 1
+        self.save()
+        return gained
 
     @property
     def xp_progress_percent(self):

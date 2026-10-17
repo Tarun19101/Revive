@@ -3,9 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import date, timedelta
 from .models import PlayerHabit
-from accounts.models import PlayerSkill
 from datetime import date, timedelta
-from accounts.models import PlayerSkill, PlayerRecord
+from accounts.models import PlayerRecord
 from accounts.forms import PlayerRecordForm
 
 @login_required
@@ -55,15 +54,6 @@ def complete_habit(request, habit_id):
             profile.level += 1
         profile.save()
 
-        # Skill XP: 5 + 2 * (streak // 5)
-        skill_xp = 5 + 2 * (habit.streak // 5)
-        skill = PlayerSkill.objects.get(user=request.user, skill_key=habit.skill_key)
-        skill.xp += skill_xp
-        while skill.xp >= skill.xp_for_next_level:
-            skill.xp -= skill.xp_for_next_level
-            skill.level += 1
-        skill.save()
-
-        messages.success(request, f'{habit.name} done! +2 player XP, +{skill_xp} {skill.name} XP')
+        messages.success(request, f'{habit.name} done! +2 player XP')
 
     return redirect('habit_list')
