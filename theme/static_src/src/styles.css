@@ -11,13 +11,13 @@
 
 
 @theme {
-    --color-bg: #f5fcfc;
-    --color-surface: #ddecec;
-    --color-surface-2: #e7f6f6;
+    --color-bg: #0B0D12;
+    --color-surface: #11141B;
+    --color-surface-2: #171B24;
     --color-border: #2c2c87;
-    --color-text: #000000;
-    --color-muted: #696c70;
-    --color-accent: #da1029;
+    --color-text: #F5F7FA;
+    --color-muted: #8B93A7;
+    --color-accent: #8B5CF6;
     --color-input-border: #878b8f;
 
     --font-display: "Fraunces", serif;

@@ -6,9 +6,17 @@ from .models import PlayerRecord, PlayerSkill, PlayerAchievement
 from bank.views import get_total_money
 from django.contrib import messages
 from django.http import HttpResponse
-from datetime import date
+from datetime import date, datetime
 from .models import PlayerRecord, PlayerSkill, get_attribute_levels
-from .constants import ATTRIBUTE_SKILLS
+from .constants import ATTRIBUTE_SKILLS, UTC_OFFSETS
+
+
+def _offset_initial(profile):
+    """Pre-select this computer's UTC offset until the player has chosen one."""
+    if profile.utc_offset_minutes is not None:
+        return {}
+    minutes = int(datetime.now().astimezone().utcoffset().total_seconds() // 60)
+    return {'utc_offset_minutes': minutes} if minutes in UTC_OFFSETS else {}
 
 
 def index(request):
@@ -38,20 +46,9 @@ def onboarding(request):
         form = OnboardingForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-
-            PlayerSkill.objects.filter(user=request.user, skill_key='battle_iq').update(
-                choice=form.cleaned_data['martial_art']
-            )
-            PlayerSkill.objects.filter(user=request.user, skill_key='weapon_mastery').update(
-                choice=form.cleaned_data['weapon']
-            )
-            PlayerSkill.objects.filter(user=request.user, skill_key='hobby').update(
-                choice=form.cleaned_data['hobby']
-            )
-
             return redirect('dashboard')
     else:
-        form = OnboardingForm(instance=profile)
+        form = OnboardingForm(instance=profile, initial=_offset_initial(profile))
 
     return render(request, 'accounts/onboarding.html', {'form': form})
 
@@ -60,7 +57,7 @@ def profile(request):
     profile = request.user.profile
     achievements = request.user.achievements
 
-    form = ProfileEditForm(instance=profile)
+    form = ProfileEditForm(instance=profile, initial=_offset_initial(profile))
     achievement_form = AchievementForm(instance=achievements)
 
     if request.method == 'POST':

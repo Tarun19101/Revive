@@ -2,7 +2,15 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import PlayerProfile, PlayerRecord, PlayerAchievement
+from .constants import UTC_OFFSET_CHOICES
 
+
+def utc_offset_field():
+    return forms.TypedChoiceField(
+        label='Time zone (UTC offset)',
+        choices=[('', 'Select your UTC offset')] + UTC_OFFSET_CHOICES,
+        coerce=int,
+    )
 
 class RegisterForm(UserCreationForm):
     class Meta:
@@ -11,18 +19,28 @@ class RegisterForm(UserCreationForm):
 
 
 class OnboardingForm(forms.ModelForm):
+    utc_offset_minutes = utc_offset_field()
 
     class Meta:
         model = PlayerProfile
-        fields = ['date_of_birth', 'weight_kg', 'height_cm']
+        fields = ['date_of_birth', 'weight_kg', 'height_cm', 'utc_offset_minutes']
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # The model allows blanks, but onboarding exists to collect all four answers.
+        for name in ('date_of_birth', 'weight_kg', 'height_cm'):
+            self.fields[name].required = True
+
+
 class ProfileEditForm(forms.ModelForm):
+    utc_offset_minutes = utc_offset_field()
+
     class Meta:
         model = PlayerProfile
-        fields = ['weight_kg', 'height_cm']
+        fields = ['weight_kg', 'height_cm', 'utc_offset_minutes']
 
 
 class PlayerRecordForm(forms.ModelForm):

@@ -8,6 +8,7 @@ class PlayerProfile(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     weight_kg = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     height_cm = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    utc_offset_minutes = models.SmallIntegerField(null=True, blank=True)
 
     level = models.PositiveIntegerField(default=1)
     xp = models.PositiveIntegerField(default=0)
@@ -36,7 +37,7 @@ class PlayerProfile(models.Model):
 
     @property
     def onboarding_complete(self):
-        return all([self.date_of_birth, self.weight_kg, self.height_cm])
+        return all([self.date_of_birth, self.weight_kg, self.height_cm, self.utc_offset_minutes is not None])
 
     @property
     def xp_for_next_level(self):
@@ -67,7 +68,6 @@ class PlayerSkill(models.Model):
     skill_key = models.CharField(max_length=50)
     level = models.PositiveIntegerField(default=0)
     xp = models.PositiveIntegerField(default=0)
-    choice = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         unique_together = ('user', 'skill_key')
@@ -106,8 +106,8 @@ class PlayerSkill(models.Model):
 
     @property
     def display_name(self):
-        return f"{self.name} ({self.choice})" if self.choice else self.name
-
+        return self.name
+    
     def __str__(self):
         return f"{self.user.username} - {self.name}"
 
